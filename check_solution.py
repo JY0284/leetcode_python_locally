@@ -11,7 +11,7 @@ sol_cls = sol_module.Solution()
 tar_meth = list(filter(lambda x: not x.startswith('__'), dir(sol_cls)))[0]
 tar_meth = getattr(sol_cls, tar_meth)
 examples = re.findall(
-    r"Input: ([^\n]+).*?Output: ([^\n]+)", sol_module.raw_text, flags=re.DOTALL)
+    r"^ *Input: ([^\n]+).*?Output: ([^\n]+)", sol_module.raw_text, flags=re.DOTALL|re.MULTILINE)
 call_str = "tar_meth"
 
 
