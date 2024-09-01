@@ -1,8 +1,6 @@
-Here's the refined README.md that incorporates the additional reasons for using the 'leetcode_python_locally' repository:
-
----
-
 # LeetCode Python Locally 💻
+
+[English](README.md) | [简体中文](README.zh.md)
 
 Welcome to the **LeetCode Python Locally** repository! This project is designed to help you solve, test, debug, and profile LeetCode problems directly on your local machine. Whether you're working offline, in a restricted environment, or simply want more control over the performance analysis of your solutions, this tool is perfect for you.
 
