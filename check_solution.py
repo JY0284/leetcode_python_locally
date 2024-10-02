@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import argparse
 import re
 import sys
 from importlib import import_module
@@ -60,7 +61,8 @@ def run_a_example(
     return accepted
 
 
-def run_examples(enable_profiling=False):
+def run_examples(enable_profiling=False, example_count=-1):
+    global examples
     accepted_count = 0
     c_profiler = None
     l_profiler = None
@@ -69,6 +71,9 @@ def run_examples(enable_profiling=False):
         c_profiler = cProfile.Profile()
         l_profiler = line_profiler.LineProfiler()
         l_profiler.add_function(tar_meth)
+
+    if example_count > 0:
+        examples = examples[:example_count]
 
     for i, (input_str, output_str) in enumerate(examples):
         print(Fore.BLUE + Style.BRIGHT + f"\nExample {i+1}" + Style.RESET_ALL)
@@ -115,17 +120,24 @@ def run_examples(enable_profiling=False):
 
 if __name__ == "__main__":
     colorama.init()
-    enable_profiling = False
-    if len(sys.argv) > 1 and sys.argv[1] == "-p":
+    parser = argparse.ArgumentParser(description="Test and profiling leetcode solution locally.")
+    parser.add_argument('-p', action='store_true', help='Enable profiling')
+    parser.add_argument('-n', type=int, help='An integer parameter', default=-1)
+    args = parser.parse_args()
+
+    enable_profiling = args.p
+    n = args.n
+
+    if enable_profiling:
         try:
             import cProfile
             import line_profiler
         except ImportError:
             print(
-                "Warning: Profiling librarie not available. Use `pip install line_profiler`"
-                + "to install line_profiler, which could provide line by line performance data."
+                "Warning: Profiling libraries not available. Use `pip install line_profiler` "
+                "to install line_profiler for detailed performance data."
             )
-            sys.exit()
-        enable_profiling = True
-    run_examples(enable_profiling=enable_profiling)
+            sys.exit(1)
+
+    run_examples(enable_profiling=enable_profiling, example_count=n)
     colorama.deinit()
