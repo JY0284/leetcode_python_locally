@@ -1,5 +1,8 @@
-from typing import List
+from collections import defaultdict, Counter
+from functools import lru_cache
+from heapq import heapify, heappush, heappop
 import random
+from typing import List
 from pprint import pprint
 
 raw_text = """
