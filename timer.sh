@@ -1,6 +1,9 @@
 #!/bin/bash
 set +m
 
+# Accept optional solution_name argument
+solution_name="$1"
+
 # Define colors and effects
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -16,7 +19,11 @@ NOTIFY_INTERVAL=60
 
 # Start the timer
 echo -e "${CLEAR}"
-echo -e "${GREEN}Timer started. Press [Enter] to stop the timer.${NC}"
+if [ -n "$solution_name" ]; then
+    echo -e "${GREEN}Timer started for solution: ${YELLOW}$solution_name${NC}. Press [Enter] to stop the timer."
+else
+    echo -e "${GREEN}Timer started. Press [Enter] to stop the timer.${NC}"
+fi
 start_time=$(date +%s)
 
 # Function to update elapsed time
@@ -31,7 +38,7 @@ update_time() {
         seconds=$(( elapsed_time % 60 ))
 
         # Clear the line and print elapsed time
-        printf "\r${BLUE}Elapsed time: ${RED}$hours hours, $minutes minutes, and $seconds seconds${NC}"
+        printf "\r${BLUE}Elapsed time: ${RED}%02d hours, %02d minutes, and %02d seconds${NC}" $hours $minutes $seconds
 
         # Sleep for 1 second before updating
         sleep 1
@@ -83,3 +90,23 @@ seconds=$(( elapsed_time % 60 ))
 
 # Final output when timer stops
 echo -e "\n${BLUE}Final elapsed time: ${RED}$hours hours, $minutes minutes, and $seconds seconds${NC}"
+
+# If solution_name is provided, record to timer_record.csv
+if [ -n "$solution_name" ]; then
+    # Get current date
+    current_date=$(date '+%Y-%m-%d %H:%M:%S')
+
+    # Format time_cost as hh:mm:ss
+    time_cost=$(printf "%02d:%02d:%02d" $hours $minutes $seconds)
+
+    # Check if timer_record.csv exists, if not, create it with headers
+    if [ ! -f timer_record.csv ]; then
+        echo "Date,Solution Name,Time Cost" > timer_record.csv
+    fi
+
+    # Append the record to timer_record.csv
+    echo "$current_date,$solution_name,$time_cost" >> timer_record.csv
+
+    # Notify the user that the timer data has been recorded
+    echo -e "${GREEN}Timer data for solution '${YELLOW}$solution_name${GREEN}' has been recorded in 'timer_record.csv'.${NC}"
+fi
