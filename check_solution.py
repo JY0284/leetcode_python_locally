@@ -19,7 +19,7 @@ if "Input:" in sol_module.raw_text:
     )
 else:
     examples = re.findall(
-        r"^ *输入：([^\n]+).*?输出：([^\n]+)",
+        r"^ *输入[：:]([^\n]+).*?输出[：:] ([^\n]+)",
         sol_module.raw_text,
         flags=re.DOTALL | re.MULTILINE,
     )
